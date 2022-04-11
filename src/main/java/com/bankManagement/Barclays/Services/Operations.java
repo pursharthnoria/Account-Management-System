@@ -5,7 +5,7 @@ import java.lang.Math;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.bankManagement.Barclays.Users.bankCustomers;
+import com.bankManagement.Barclays.Users.BankCustomers;
 import com.bankManagement.Barclays.repository.BankRepository;
 
 public class Operations {
@@ -13,8 +13,8 @@ public class Operations {
     // Write the functions that are required by Prerna here in this class.
     @Autowired
     BankRepository repo;
-    public String accountCreation(bankCustomers customer) {
-        return repo.accountCreation(customer);
+    public String accountCreation(BankCustomers customer) {
+        return repo.accountCreation(customer, generateCustomerId(), generatePassword());
     }
 
 

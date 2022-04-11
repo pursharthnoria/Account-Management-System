@@ -1,6 +1,6 @@
 package com.bankManagement.Barclays.Users;
 
-public class users {
+public class Users {
     String userId;
     String password;
     String Role;

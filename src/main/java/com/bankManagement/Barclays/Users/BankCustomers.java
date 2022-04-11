@@ -1,8 +1,7 @@
 package com.bankManagement.Barclays.Users;
 
-public class bankCustomers {
+public class BankCustomers {
 	
-	String customerId;
     String panCard;
     String adharNumber;
     String name;
@@ -24,12 +23,6 @@ public class bankCustomers {
 	}
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
-	}
-	public String getCustomerId() {
-		return customerId;
-	}
-	public void setCustomerId(String customerId) {
-		this.customerId = customerId;
 	}
 	
 	

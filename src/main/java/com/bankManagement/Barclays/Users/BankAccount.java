@@ -1,6 +1,6 @@
 package com.bankManagement.Barclays.Users;
 
-public class bankAccount {
+public class BankAccount {
 
 	String accountNumber;
 	String customerId;

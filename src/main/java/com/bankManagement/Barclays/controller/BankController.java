@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bankManagement.Barclays.Users.bankCustomers;
-import com.bankManagement.Barclays.Users.users;
+import com.bankManagement.Barclays.Users.BankCustomers;
+import com.bankManagement.Barclays.Users.Users;
 
 @RestController
 @RequestMapping("/bank")
@@ -23,7 +23,7 @@ public class BankController {
     Operations operations;
 	
 	@PostMapping(path="/login")
-	public ResponseEntity<String> login(@RequestBody users user){
+	public ResponseEntity<String> login(@RequestBody Users user){
 		return null;
 	}
 	
@@ -33,7 +33,7 @@ public class BankController {
 	}
 	
 	@PostMapping("/accountCreation")
-	public ResponseEntity<String> accountCreation(@RequestBody bankCustomers customer){
+	public ResponseEntity<String> accountCreation(@RequestBody BankCustomers customer){
 	  String customerId=operations.accountCreation(customer);
 	  ResponseEntity<String> response;
 	  if(customerId!="False") {
