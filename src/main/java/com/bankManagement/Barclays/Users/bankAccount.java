@@ -2,7 +2,11 @@ package com.bankManagement.Barclays.Users;
 
 public class bankAccount {
 
-    public String getAccountNumber() {
+	String accountNumber;
+	String customerId;
+	int bankBalance;
+
+	public String getAccountNumber() {
 		return accountNumber;
 	}
 	public void setAccountNumber(String accountNumber) {
@@ -20,9 +24,7 @@ public class bankAccount {
 	public void setBankBalance(int bankBalance) {
 		this.bankBalance = bankBalance;
 	}
-	String accountNumber;
-    String customerId;
-    int bankBalance;
+
 
     // If time is left, add savings or any other feature
 }
