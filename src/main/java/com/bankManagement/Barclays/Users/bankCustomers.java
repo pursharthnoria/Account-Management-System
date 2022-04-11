@@ -9,9 +9,23 @@ public class bankCustomers {
     String postalAddress;
     String email;
     String dob;
+    String phoneNumber;
+    String city;
     
     
-    public String getCustomerId() {
+    public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
+	}
+	public String getCustomerId() {
 		return customerId;
 	}
 	public void setCustomerId(String customerId) {
