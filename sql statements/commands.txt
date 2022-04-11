@@ -1,0 +1,43 @@
+CREATE TABLE IF NOT EXISTS Customer
+(
+    c_id integer PRIMARY KEY,
+    zip varchar(10),
+    aadhar varchar(20),
+    pan varchar(20),
+    phone varchar(20),
+    dob date,
+    email varchar(50),
+    password varchar(50),
+    city varchar(30),
+    name varchar(30)
+);
+
+CREATE TABLE IF NOT EXISTS Role
+(
+    r_id integer PRIMARY KEY,
+    role_type varchar(20)
+);
+
+CREATE TABLE IF NOT EXISTS bank_details
+(
+    ifsc_code varchar(20) PRIMARY KEY,
+    branch_name varchar(20)
+);
+
+CREATE TABLE IF NOT EXISTS cust_account
+(
+    account_type varchar(20),
+    customer_id varchar(20) PRIMARY KEY,
+    Account_id varchar(20),
+    init_deposit integer,
+);
+
+CREATE TABLE IF NOT EXISTS Transactions
+(
+    trans_id integer PRIMARY KEY,
+    trans_amount integer,
+    transaction_type varchar(20),
+    trans_from varchar(30),
+    trans_to varchar(30)
+);
+
