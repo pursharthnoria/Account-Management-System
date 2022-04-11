@@ -1,6 +1,9 @@
 package com.bankManagement.Barclays.controller;
 
 import com.bankManagement.Barclays.Services.Operations;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bankManagement.Barclays.Users.BankCustomers;
+import com.bankManagement.Barclays.Users.Transaction;
 import com.bankManagement.Barclays.Users.Users;
 
 @RestController
@@ -51,8 +55,11 @@ public class BankController {
 	}
 	
 	@GetMapping("/lastTransaction")
-	public ResponseEntity<String> fiveTransaction(@RequestParam String accountNumber){
-		return null;
+	public ResponseEntity<List<Transaction>> fiveTransaction(@RequestParam String accountNumber){
+		List<Transaction> transaction=operations.fiveTransaction(accountNumber);
+		return new ResponseEntity<List<Transaction>>(transaction, HttpStatus.OK);
+		
+		
 	}
 	
 	@GetMapping("/detailedTransaction")

@@ -1,11 +1,13 @@
 package com.bankManagement.Barclays.Services;
 
 import java.lang.Math;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.bankManagement.Barclays.Users.BankCustomers;
+import com.bankManagement.Barclays.Users.Transaction;
 import com.bankManagement.Barclays.repository.BankRepository;
 
 public class Operations {
@@ -15,6 +17,11 @@ public class Operations {
     BankRepository repo;
     public String accountCreation(BankCustomers customer) {
         return repo.accountCreation(customer, generateCustomerId(), generatePassword());
+    }
+    
+    public List<Transaction> fiveTransaction(String fromAccount){
+    	return repo.fiveTransaction(fromAccount);
+    
     }
 
 
