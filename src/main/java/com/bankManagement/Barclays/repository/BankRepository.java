@@ -16,24 +16,26 @@ public class BankRepository {
 	JdbcTemplate jdbcTemplate;
 
 	public String accountCreation(bankCustomers customer) {
-		String password="abc";
+		String password = "abc";
 		customer.setCustomerId("123456");
-		try{
-			 SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-			 java.util.Date utilDate = format.parse(customer.getDob());
-		        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+			java.util.Date utilDate = format.parse(customer.getDob());
+
+			java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
 			jdbcTemplate.update("insert into Customer values (?,?,?,?,?,?,?,?,?,?)",
-					new Object[] {customer.getCustomerId(),customer.getPostalAddress(),customer.getAdharNumber(),customer.getPanCard(),customer.getPhoneNumber(),sqlDate,customer.getEmail(),password,customer.getCity(),customer.getName()});
+					new Object[] { customer.getCustomerId(), customer.getPostalAddress(), customer.getAdharNumber(),
+							customer.getPanCard(), customer.getPhoneNumber(), sqlDate, customer.getEmail(), password,
+							customer.getCity(), customer.getName() });
 			return customer.getCustomerId();
-			
-		}catch(Exception e) {
+
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return "False";
-			
+
 		}
-		
-		
+
 	}
 
 }
