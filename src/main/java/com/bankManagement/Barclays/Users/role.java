@@ -1,6 +1,10 @@
 package com.bankManagement.Barclays.Users;
 
 public class role {
+	
+	int roleId;
+    String name;
+    
     public int getRoleId() {
 		return roleId;
 	}
@@ -13,6 +17,5 @@ public class role {
 	public void setName(String name) {
 		this.name = name;
 	}
-	int roleId;
-    String name;
+	
 }

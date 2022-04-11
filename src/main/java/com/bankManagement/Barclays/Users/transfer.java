@@ -1,6 +1,13 @@
 package com.bankManagement.Barclays.Users;
 
 public class transfer {
+	
+	String fromAccountNumber;
+    String toAccountNumber;
+    float amount;
+    String transactionReferenceNumber;
+    String type;                                //Debit or credit
+    float currentBalance;
 
     public String getFromAccountNumber() {
 		return fromAccountNumber;
@@ -38,11 +45,6 @@ public class transfer {
 	public void setCurrentBalance(float currentBalance) {
 		this.currentBalance = currentBalance;
 	}
-	String fromAccountNumber;
-    String toAccountNumber;
-    float amount;
-    String transactionReferenceNumber;
-    String type;                                //Debit or credit
-    float currentBalance;
+	
 
 }
