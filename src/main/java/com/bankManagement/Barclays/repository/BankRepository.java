@@ -73,4 +73,14 @@ public class BankRepository {
         }
     }
 
+    public String deposit(String accountNumber, int amount){
+        try{
+            jdbcTemplate.update("UPDATE Account SET ac_balance=ac_balance+? where ac_num=?",new Object[] { accountNumber, amount});
+            return "True";
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            return "False";
+        }
+    }
+
 }
