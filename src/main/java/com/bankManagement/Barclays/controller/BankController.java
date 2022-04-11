@@ -1,5 +1,8 @@
 package com.bankManagement.Barclays.controller;
 
+import com.bankManagement.Barclays.Services.Operations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +19,9 @@ import com.bankManagement.Barclays.Users.users;
 @RequestMapping("/bank")
 public class BankController {
 	
+	@Autowired
+    Operations operations;
+	
 	@PostMapping(path="/login")
 	public ResponseEntity<String> login(@RequestBody users user){
 		return null;
@@ -28,7 +34,15 @@ public class BankController {
 	
 	@PostMapping("/accountCreation")
 	public ResponseEntity<String> accountCreation(@RequestBody bankCustomers customer){
-		return null;
+	  String customerId=operations.accountCreation(customer);
+	  ResponseEntity<String> response;
+	  if(customerId!="False") {
+		  response= new ResponseEntity<String>(customerId,HttpStatus.OK);
+	  }else {
+		  response= new ResponseEntity<String>("Error",HttpStatus.OK);
+	  }
+	  return response;
+	  
 	}
 	
 	@GetMapping("/viewAccounts")
