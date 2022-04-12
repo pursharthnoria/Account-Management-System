@@ -71,4 +71,14 @@ public class Operations {
 		return String.valueOf(password);
 	}
 
+    public String generateTransactionId() {
+        int min = 10000;
+        int max = 99999;
+
+        double partTransactionId = Math.random() * (max - min + 1) + min;
+        double SecondPartTransactionId = Math.random() * (max - min + 1) + min;
+
+        return String.valueOf(partTransactionId)+String.valueOf(SecondPartTransactionId);
+    }
+
 }
