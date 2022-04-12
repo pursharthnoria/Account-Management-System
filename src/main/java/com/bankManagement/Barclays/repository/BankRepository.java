@@ -37,10 +37,10 @@ public class BankRepository {
 
 			java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
-			jdbcTemplate.update("insert into Customer values (?,?,?,?,?,?,?,?,?,?)",
+			jdbcTemplate.update("insert into Customer values (?,?,?,?,?,?,?,?,?,?,?)",
 					new Object[] { customerId, customer.getPostalAddress(), customer.getAdharNumber(),
 							customer.getPanCard(), customer.getPhoneNumber(), sqlDate, customer.getEmail(), password,
-							customer.getCity(), customer.getName() });
+							customer.getCity(), customer.getName(), customer.getRole()});
 			return customerId;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -104,7 +104,7 @@ public class BankRepository {
 
 	public String deposit(String accountNumber, int amount) {
 		try {
-			jdbcTemplate.update("UPDATE Account SET ac_balance=ac_balance+? where ac_num=?",
+			jdbcTemplate.update("UPDATE cust_account SET init_deposit=init_deposit+? where Account_id=?",
 					new Object[] { amount, accountNumber });
 			return "True";
 		} catch (Exception e) {
@@ -117,7 +117,7 @@ public class BankRepository {
     	try {
     		int currentBalance= getbalance(accountNumber);
         	if(currentBalance>amount) {
-        		jdbcTemplate.update("UPDATE Account SET ac_balance=ac_balance-? where ac_num=?",new Object[] {amount, accountNumber});
+        		jdbcTemplate.update("UPDATE cust_account SET init_deposit=init_deposit-? where Account_id=?",new Object[] {amount, accountNumber});
         		return true;
         	}else {
         		return false;

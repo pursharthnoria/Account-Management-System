@@ -35,7 +35,7 @@ public class BankController {
 			result="Wrong credentials. Please try again with correct ID and paaword";
 			return new ResponseEntity<String>(result, HttpStatus.BAD_REQUEST);
 		}
-		result="role";
+		result=customer.getRole();
 		return new ResponseEntity<String>(result,HttpStatus.OK);
 	}
 

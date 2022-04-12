@@ -10,9 +10,16 @@ public class BankCustomers {
     String dob;
     String phoneNumber;
     String city;
+    String role;
     
     
-    public String getCity() {
+    public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	public String getCity() {
 		return city;
 	}
 	public void setCity(String city) {

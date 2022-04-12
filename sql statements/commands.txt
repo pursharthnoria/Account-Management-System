@@ -10,18 +10,7 @@ CREATE TABLE IF NOT EXISTS Customer
     password varchar(50),
     city varchar(30),
     name varchar(30)
-);
-
-CREATE TABLE IF NOT EXISTS Role
-(
-    r_id integer PRIMARY KEY,
-    role_type varchar(20)
-);
-
-CREATE TABLE IF NOT EXISTS bank_details
-(
-    ifsc_code varchar(20) PRIMARY KEY,
-    branch_name varchar(20)
+    role varchar(30)
 );
 
 CREATE TABLE IF NOT EXISTS cust_account
