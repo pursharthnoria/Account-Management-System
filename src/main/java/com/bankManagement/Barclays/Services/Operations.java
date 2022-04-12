@@ -28,8 +28,8 @@ public class Operations {
 		return repo.accountCreation(customer, generateCustomerId(), generatePassword(), generateAccountNumber());
 	}
 
-	public List<Transaction> fiveTransaction(String fromAccount) {
-		return repo.fiveTransaction(fromAccount);
+	public List<Transaction> fiveTransaction(String account) {
+		return repo.fiveTransaction(account);
 
 	}
 
@@ -51,6 +51,22 @@ public class Operations {
 		} else {
 			return false;
 		}
+	}
+	
+	public List<Transaction> detailedTransaction(String account, String fromDate, String toDate){
+		return repo.detailedTransaction(account, fromDate, toDate);
+	}
+	
+	public String transfer(String fromAccount, String toAccount, int amount) {
+		String transactionId=generateTransactionId();
+		String result="";
+		if(repo.transfer(fromAccount, toAccount, amount,transactionId )) {
+			result="Transfering funds is successfull. TransactionId "+ transactionId;
+		}else {
+			result="Transfering fund is not done due to some error.Please try again";
+		}
+		return result;
+		
 	}
 
 	public String generateCustomerId() {

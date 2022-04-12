@@ -70,16 +70,17 @@ public class BankController {
 		return new ResponseEntity<List<BankAccount>>(Accounts, HttpStatus.OK);
 	}
 
-	@GetMapping("/lastTransaction")
+	@GetMapping("/lastTransactions")
 	public ResponseEntity<List<Transaction>> fiveTransaction(@RequestParam String accountNumber) {
 		List<Transaction> transaction = operations.fiveTransaction(accountNumber);
 		return new ResponseEntity<List<Transaction>>(transaction, HttpStatus.OK);
 
 	}
 
-	@GetMapping("/detailedTransaction")
-	public ResponseEntity<String> detailedTransaction(@RequestParam String accountNumber) {
-		return null;
+	@GetMapping("/detailedTransactions")
+	public ResponseEntity<List<Transaction>> detailedTransaction(@RequestParam String accountNumber, @RequestParam String fromDate, @RequestParam String toDate) {
+		List<Transaction> transaction = operations.detailedTransaction(accountNumber, fromDate, toDate);
+		return new ResponseEntity<List<Transaction>>(transaction, HttpStatus.OK);
 	}
 
 	@PutMapping("/withdrawal")
@@ -118,7 +119,12 @@ public class BankController {
 	@PutMapping("/transfer")
 	public ResponseEntity<String> transfer(@RequestParam String fromAccountNumber, @RequestParam String toAccountNumber,
 			@RequestParam int amount) {
-		return null;
+		String result= operations.transfer(fromAccountNumber, toAccountNumber, amount);
+		if(result.contains("successfull")) {
+			return new ResponseEntity<String>(result,HttpStatus.OK);
+		}else {
+			return new ResponseEntity<String>(result,HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

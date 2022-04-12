@@ -41,10 +41,11 @@ public class BankRepository {
 			jdbcTemplate.update("insert into Customer values (?,?,?,?,?,?,?,?,?,?,?)",
 					new Object[] { customerId, customer.getPostalAddress(), customer.getAdharNumber(),
 							customer.getPanCard(), customer.getPhoneNumber(), sqlDate, customer.getEmail(), password,
-							customer.getCity(), customer.getName(), customer.getRole()});
-			jdbcTemplate.update("insert into cust_account values(?,?,?)",new Object[] {accountNumber, customerId, 0});
+							customer.getCity(), customer.getName(), customer.getRole() });
+			jdbcTemplate.update("insert into cust_account values(?,?,?)",
+					new Object[] { accountNumber, customerId, 0 });
 			return customerId;
-			
+
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return "False";
@@ -53,10 +54,11 @@ public class BankRepository {
 	}
 
 	public BankCustomers login(Login user) {
-		BankCustomers customer=null;
+		BankCustomers customer = null;
 		try {
-			String query="Select * from Customer where email="+ user.getUserId() + " and password=" + user.getPassword();
-			customer=jdbcTemplate.queryForObject(query, BankCustomers.class);
+			String query = "Select * from Customer where email=" + user.getUserId() + " and password="
+					+ user.getPassword();
+			customer = jdbcTemplate.queryForObject(query, BankCustomers.class);
 			return customer;
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -84,11 +86,11 @@ public class BankRepository {
 		}
 	}
 
-	public List<Transaction> fiveTransaction(String fromAccount) {
+	public List<Transaction> fiveTransaction(String account) {
 		List<Transaction> fiveTransactions = new ArrayList<>();
 		try {
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-					"Select * from Transactions where trans_from = ? LIMIT 5", new Object[] { fromAccount });
+					"Select * from Transactions where trans_from = ? or trans_to= ? LIMIT 5", new Object[] { account, account });
 			fiveTransactions = rows.stream().map(m -> {
 				transaction.setTransactionReferenceNumber(String.valueOf(m.get("trans_id")));
 				transaction.setFromAccountNumber(String.valueOf(m.get("trans_from")));
@@ -110,12 +112,13 @@ public class BankRepository {
 		try {
 			jdbcTemplate.update("UPDATE cust_account SET balance=balance+? where Account_id=?",
 					new Object[] { amount, accountNumber });
-			
+
 			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 			Date date = new Date();
 			java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-			jdbcTemplate.update("insert into Transaction values (?,?,?,?,?,?)",new Object[] {transactionId,amount,"deposit","Cash",accountNumber,sqlDate});
-			
+			jdbcTemplate.update("insert into Transaction values (?,?,?,?,?,?)",
+					new Object[] { transactionId, amount, "deposit", "Cash", accountNumber, sqlDate });
+
 			return "True";
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -123,74 +126,92 @@ public class BankRepository {
 		}
 	}
 
-	public boolean cashWithdrawal(String accountNumber,int amount, String transactionId){
-    	try {
-    		int currentBalance= getbalance(accountNumber);
-        	if(currentBalance>amount) {
-        		jdbcTemplate.update("UPDATE cust_account SET balance=balance-? where Account_id=?",new Object[] {amount, accountNumber});
-        		
-        		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-    			Date date = new Date();
-    			java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-    			jdbcTemplate.update("insert into Transaction values (?,?,?,?,?,?)",new Object[] {transactionId,amount,"withdraw",accountNumber,"cash",sqlDate});
-    			
-        		
-        		return true;
-        	}else {
-        		return false;
-        	}
-        }catch (Exception e) {
+	public boolean cashWithdrawal(String accountNumber, int amount, String transactionId) {
+		try {
+			int currentBalance = getbalance(accountNumber);
+			if (currentBalance > amount) {
+				jdbcTemplate.update("UPDATE cust_account SET balance=balance-? where Account_id=?",
+						new Object[] { amount, accountNumber });
+
+				SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+				Date date = new Date();
+				java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+				jdbcTemplate.update("insert into Transaction values (?,?,?,?,?,?)",
+						new Object[] { transactionId, amount, "withdraw", accountNumber, "cash", sqlDate });
+
+				return true;
+			} else {
+				return false;
+			}
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return false;
 		}
-    }
+	}
 
 	public int getbalance(String accountNumber) {
 		try {
 			String query = "Select init_deposit from cust_account where Account_id=" + accountNumber;
 			return jdbcTemplate.queryForObject(query, Integer.class);
-		}catch (Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return 0;
 		}
-		
+
 	}
 
-    public String transfer(String fromAccount, String toAccount, int Amount) {
-        try{
-            String queryFrom = "UPDATE cust_account SET balance=balance-? WHERE Account_id=?";
-            jdbcTemplate.update(queryFrom, new Object[] {Amount, fromAccount});
-            System.out.println("Amount debited.");
-            String queryTo = "UPDATE cust_account SET balance=balance+? WHERE Account_id=?";
-            jdbcTemplate.update(queryTo, new Object[] {Amount, toAccount});
-            System.out.println("Amount credited.");
-            return "True";
-        } catch (Exception e){
-            System.out.println("Could not transfer Funds.");
-            return "False";
-        }
-    }
+	public boolean transfer(String fromAccount, String toAccount, int amount, String transactionId) {
+		try {
+			String queryFrom = "UPDATE cust_account SET balance=balance-? WHERE Account_id=?";
+			jdbcTemplate.update(queryFrom, new Object[] { amount, fromAccount });
+			
+			
+			System.out.println("Amount debited.");
+			String queryTo = "UPDATE cust_account SET balance=balance+? WHERE Account_id=?";
+			jdbcTemplate.update(queryTo, new Object[] { amount, toAccount });
+			System.out.println("Amount credited.");
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+			Date date = new Date();
+			java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+			jdbcTemplate.update("insert into Transaction values (?,?,?,?,?,?)",
+					new Object[] { transactionId, amount, "transfer", fromAccount, toAccount, sqlDate });
 
-    public List<Transaction> detailedTransaction(String fromAccount, String fromDate, String toDate) {
-        List<Transaction> allTransactions = new ArrayList<>();
-        try {
-            List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-                    "Select * from Transactions where trans_from=? where trans_date>=? and trans_date<=?", new Object[] { fromAccount, fromDate, toDate });
-            allTransactions = rows.stream().map(m -> {
-                transaction.setTransactionReferenceNumber(String.valueOf(m.get("trans_id")));
-                transaction.setFromAccountNumber(String.valueOf(m.get("trans_from")));
-                transaction.setToAccountNumber(String.valueOf(m.get("trans_to")));
-                transaction.setAmount(Float.parseFloat(String.valueOf(m.get("trans_amount"))));
-                transaction.setType(String.valueOf(m.get("transaction_type")));
-                transaction.setTransactionDate(String.valueOf("trans_date"));
-                return transaction;
-            }).collect(Collectors.toList());
+			return true;
+		} catch (Exception e) {
+			System.out.println("Could not transfer Funds.");
+			return false;
+		}
+	}
 
-            return allTransactions;
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return allTransactions;
-        }
-    }
+	public List<Transaction> detailedTransaction(String account, String fromDate, String toDate) {
+		List<Transaction> allTransactions = new ArrayList<>();
+		try {
+			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+			java.util.Date utilDate = format.parse(fromDate);
+			java.sql.Date fromDateSql = new java.sql.Date(utilDate.getTime());
+
+			java.util.Date utilDate1 = format.parse(toDate);
+			java.sql.Date toDateSql = new java.sql.Date(utilDate1.getTime());
+
+			List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+					"Select * from Transactions where trans_from=? or trans_to=? where trans_date>=? and trans_date<=?",
+					new Object[] { account, fromDateSql, toDateSql });
+			allTransactions = rows.stream().map(m -> {
+				transaction.setTransactionReferenceNumber(String.valueOf(m.get("trans_id")));
+				transaction.setFromAccountNumber(String.valueOf(m.get("trans_from")));
+				transaction.setToAccountNumber(String.valueOf(m.get("trans_to")));
+				transaction.setAmount(Float.parseFloat(String.valueOf(m.get("trans_amount"))));
+				transaction.setType(String.valueOf(m.get("transaction_type")));
+				transaction.setTransactionDate(String.valueOf("trans_date"));
+				return transaction;
+			}).collect(Collectors.toList());
+
+			return allTransactions;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return allTransactions;
+		}
+	}
 
 }
