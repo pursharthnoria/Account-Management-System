@@ -8,8 +8,9 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 @SpringBootApplication
 public class BankingSystemApplication extends SpringBootServletInitializer{
 	
+	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-	    return builder.sources(SpringBootApplication.class);
+	    return builder.sources(BankingSystemApplication.class);
 	  }
 
 	public static void main(String[] args) {
