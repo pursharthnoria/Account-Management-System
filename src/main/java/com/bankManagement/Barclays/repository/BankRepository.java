@@ -120,8 +120,8 @@ public class BankRepository {
 		try {
 			System.out.println("deposit started");
 			int newBalance=getbalance(accountNumber)+ amount;
-			String query="UPDATE cust_account SET balance = ? where Account_id=?";
-			jdbcTemplate.update(query,newBalance,accountNumber);
+			String query="UPDATE cust_account SET balance=? where Account_id=?";
+			jdbcTemplate.update(query, new Object[] {newBalance, accountNumber});
 
 			System.out.println("balance updated");
 			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
@@ -132,7 +132,7 @@ public class BankRepository {
 
 			return "True";
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			e.printStackTrace();;
 			return "False";
 		}
 	}
@@ -205,7 +205,7 @@ public class BankRepository {
 			java.sql.Date toDateSql = new java.sql.Date(utilDate1.getTime());
 
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-					"Select * from Transactions where trans_from=? or trans_to=? where trans_date>=? and trans_date<=?",
+					"Select * from Transactions where trans_from=? or trans_to=? AND trans_date>=? and trans_date<=?",
 					new Object[] { account,account ,fromDateSql, toDateSql });
 			allTransactions = rows.stream().map(m -> {
 				Transaction transaction = new Transaction();
