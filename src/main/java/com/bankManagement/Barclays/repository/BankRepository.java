@@ -96,7 +96,7 @@ public class BankRepository {
 		List<Transaction> fiveTransactions = new ArrayList<>();
 		try {
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-					"Select * from Transactions where trans_from = ? or trans_to= ? LIMIT 5",
+					"Select * from Transactions where trans_from = ? or trans_to= ? ORDER BY trans_Date DESC LIMIT 5",
 					new Object[] { account, account });
 			fiveTransactions = rows.stream().map(m -> {
 				Transaction transaction = new Transaction();
@@ -186,11 +186,13 @@ public class BankRepository {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 			Date date = new Date();
 			java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-			jdbcTemplate.update("insert into Transaction values (?,?,?,?,?,?)",
+//			System.out.println(date);
+			jdbcTemplate.update("insert into Transactions (trans_id, trans_amount, transaction_type, trans_from, trans_to, trans_date) values (?,?,?,?,?,?)",
 					new Object[] { transactionId, amount, "transfer", fromAccount, toAccount, sqlDate });
 
 			return true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("Could not transfer Funds.");
 			return false;
 		}
@@ -216,7 +218,7 @@ public class BankRepository {
 				transaction.setToAccountNumber(String.valueOf(m.get("trans_to")));
 				transaction.setAmount(Float.parseFloat(String.valueOf(m.get("trans_amount"))));
 				transaction.setType(String.valueOf(m.get("transaction_type")));
-				transaction.setTransactionDate(String.valueOf("trans_date"));
+				transaction.setTransactionDate(String.valueOf(m.get("trans_date")));
 				return transaction;
 			}).collect(Collectors.toList());
 
