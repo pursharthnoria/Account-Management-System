@@ -73,7 +73,7 @@ public class Operations {
 		int min = 100000;
 		int max = 999999;
 
-		double customerId = Math.random() * (max - min + 1) + min;
+		int customerId = (int) (Math.random() * (max - min + 1) + min);
 
 		return String.valueOf(customerId);
 	}
@@ -82,7 +82,7 @@ public class Operations {
 		int min = 10000000;
 		int max = 99999999;
 
-		double password = Math.random() * (max - min + 1) + min;
+		int password = (int) (Math.random() * (max - min + 1) + min);
 
 		return String.valueOf(password);
 	}
@@ -91,8 +91,8 @@ public class Operations {
         int min = 10000;
         int max = 99999;
 
-        double partTransactionId = Math.random() * (max - min + 1) + min;
-        double SecondPartTransactionId = Math.random() * (max - min + 1) + min;
+        int partTransactionId = (int) (Math.random() * (max - min + 1) + min);
+        int SecondPartTransactionId = (int) (Math.random() * (max - min + 1) + min);
 
         return String.valueOf(partTransactionId)+String.valueOf(SecondPartTransactionId);
     }
@@ -101,8 +101,8 @@ public class Operations {
         int min = 10000;
         int max = 99999;
 
-        double first = Math.random() * (max - min + 1) + min;
-        double Second= Math.random() * (max - min + 1) + min;
+        int first = (int) (Math.random() * (max - min + 1) + min);
+        int Second= (int) (Math.random() * (max - min + 1) + min);
 
         return String.valueOf(first)+String.valueOf(Second);
     }

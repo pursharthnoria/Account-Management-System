@@ -32,7 +32,7 @@ public class BankController {
 		BankCustomers customer=operations.login(user);
 		String result="";
 		if(customer==null) {
-			result="Wrong credentials. Please try again with correct ID and paaword";
+			result="Wrong credentials. Please try again with correct ID and password";
 			return new ResponseEntity<String>(result, HttpStatus.BAD_REQUEST);
 		}
 		result=customer.getRole();
@@ -106,7 +106,7 @@ public class BankController {
 	public ResponseEntity<String> cashDeposit(@RequestParam String accountNumber, @RequestParam int amount) {
 		String result;
 		ResponseEntity<String> response;
-		if (operations.cashWithdrawal(accountNumber, amount)) {
+		if (operations.deposit(accountNumber, amount)) {
 			result = amount + " is successfully deposited to account " + accountNumber;
 			response = new ResponseEntity<String>(result, HttpStatus.OK);
 		} else {
