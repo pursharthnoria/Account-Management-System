@@ -156,4 +156,19 @@ public class BankRepository {
 		
 	}
 
+    public String transfer(String fromAccount, String toAccount, int Amount) {
+        try{
+            String queryFrom = "UPDATE cust_account SET balance=balance-? WHERE Account_id=?";
+            jdbcTemplate.update(queryFrom, new Object[] {Amount, fromAccount});
+            System.out.println("Amount debited.");
+            String queryTo = "UPDATE cust_account SET balance=balance+? WHERE Account_id=?";
+            jdbcTemplate.update(queryTo, new Object[] {Amount, toAccount});
+            System.out.println("Amount credited.");
+            return "True";
+        } catch (Exception e){
+            System.out.println("Could not transfer Funds.");
+            return "False";
+        }
+    }
+
 }
