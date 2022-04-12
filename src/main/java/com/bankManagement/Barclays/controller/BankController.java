@@ -23,7 +23,7 @@ import com.bankManagement.Barclays.Users.Login;
 
 @RestController
 @RequestMapping("/bank")
-public class BankController extends SpringBootServletInitializer{
+public class BankController{
 
 	@Autowired
 	Operations operations;
