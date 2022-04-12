@@ -7,8 +7,15 @@ public class Transaction {
     float amount;
     String transactionReferenceNumber;
     String type;                                //Debit or credit
+    String transactionDate;
 
-    public String getFromAccountNumber() {
+    public String getTransactionDate() {
+		return transactionDate;
+	}
+	public void setTransactionDate(String transactionDate) {
+		this.transactionDate = transactionDate;
+	}
+	public String getFromAccountNumber() {
 		return fromAccountNumber;
 	}
 	public void setFromAccountNumber(String fromAccountNumber) {

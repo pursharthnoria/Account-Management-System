@@ -3,6 +3,7 @@ package com.bankManagement.Barclays.repository;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,7 +31,7 @@ public class BankRepository {
 	@Autowired
 	BankAccount bankAccounts;
 
-	public String accountCreation(BankCustomers customer, String customerId, String password) {
+	public String accountCreation(BankCustomers customer, String customerId, String password, String accountNumber) {
 		try {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 			java.util.Date utilDate = format.parse(customer.getDob());
@@ -41,7 +42,9 @@ public class BankRepository {
 					new Object[] { customerId, customer.getPostalAddress(), customer.getAdharNumber(),
 							customer.getPanCard(), customer.getPhoneNumber(), sqlDate, customer.getEmail(), password,
 							customer.getCity(), customer.getName(), customer.getRole()});
+			jdbcTemplate.update("insert into cust_account values(?,?,?)",new Object[] {accountNumber, customerId, 0});
 			return customerId;
+			
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			return "False";
@@ -70,7 +73,7 @@ public class BankRepository {
 			Accounts = rows.stream().map(m -> {
 				bankAccounts.setAccountNumber(String.valueOf("Account_id"));
 				bankAccounts.setCustomerId(String.valueOf("customer_id"));
-				bankAccounts.setBankBalance(Integer.parseInt(String.valueOf("init_deposit")));
+				bankAccounts.setBankBalance(Integer.parseInt(String.valueOf("balance")));
 				return bankAccounts;
 			}).collect(Collectors.toList());
 
@@ -85,13 +88,14 @@ public class BankRepository {
 		List<Transaction> fiveTransactions = new ArrayList<>();
 		try {
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-					"Select * from Transactions where fromAccount = ? LIMIT 5", new Object[] { fromAccount });
+					"Select * from Transactions where trans_from = ? LIMIT 5", new Object[] { fromAccount });
 			fiveTransactions = rows.stream().map(m -> {
 				transaction.setTransactionReferenceNumber(String.valueOf(m.get("trans_id")));
 				transaction.setFromAccountNumber(String.valueOf(m.get("trans_from")));
 				transaction.setToAccountNumber(String.valueOf(m.get("trans_to")));
 				transaction.setAmount(Float.parseFloat(String.valueOf(m.get("trans_amount"))));
 				transaction.setType(String.valueOf(m.get("transaction_type")));
+				transaction.setTransactionDate(String.valueOf("trans_date"));
 				return transaction;
 			}).collect(Collectors.toList());
 
@@ -102,10 +106,16 @@ public class BankRepository {
 		}
 	}
 
-	public String deposit(String accountNumber, int amount) {
+	public String deposit(String accountNumber, int amount, String transactionId) {
 		try {
-			jdbcTemplate.update("UPDATE cust_account SET init_deposit=init_deposit+? where Account_id=?",
+			jdbcTemplate.update("UPDATE cust_account SET balance=balance+? where Account_id=?",
 					new Object[] { amount, accountNumber });
+			
+			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+			Date date = new Date();
+			java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+			jdbcTemplate.update("insert into Transaction values (?,?,?,?,?,?)",new Object[] {transactionId,amount,"deposit","Cash",accountNumber,sqlDate});
+			
 			return "True";
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -113,11 +123,18 @@ public class BankRepository {
 		}
 	}
 
-	public boolean cashWithdrawal(String accountNumber,int amount){
+	public boolean cashWithdrawal(String accountNumber,int amount, String transactionId){
     	try {
     		int currentBalance= getbalance(accountNumber);
         	if(currentBalance>amount) {
-        		jdbcTemplate.update("UPDATE cust_account SET init_deposit=init_deposit-? where Account_id=?",new Object[] {amount, accountNumber});
+        		jdbcTemplate.update("UPDATE cust_account SET balance=balance-? where Account_id=?",new Object[] {amount, accountNumber});
+        		
+        		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+    			Date date = new Date();
+    			java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+    			jdbcTemplate.update("insert into Transaction values (?,?,?,?,?,?)",new Object[] {transactionId,amount,"withdraw",accountNumber,"cash",sqlDate});
+    			
+        		
         		return true;
         	}else {
         		return false;

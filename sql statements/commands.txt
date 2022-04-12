@@ -16,9 +16,9 @@ CREATE TABLE IF NOT EXISTS Customer
 CREATE TABLE IF NOT EXISTS cust_account
 (
     account_type varchar(20),
-    customer_id varchar(20) PRIMARY KEY,
-    Account_id varchar(20),
-    init_deposit integer,
+    customer_id varchar(20),
+    Account_id varchar(20) PRIMARY KEY,
+    balance integer,
 );
 
 CREATE TABLE IF NOT EXISTS Transactions
@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS Transactions
     trans_amount integer,
     transaction_type varchar(20),
     trans_from varchar(30),
-    trans_to varchar(30)
+    trans_to varchar(30),
+    trans_date date,
 );
 

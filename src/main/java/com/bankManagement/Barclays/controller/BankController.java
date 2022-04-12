@@ -86,6 +86,10 @@ public class BankController {
 	public ResponseEntity<String> cashWithdrawal(@RequestParam String accountNumber, @RequestParam int amount) {
 		String result;
 		ResponseEntity<String> response;
+		if(amount>10000) {
+			result="Limit for withdraw in single day is 10000. More than 10000 cannot be withdraw in single day";
+			response=new ResponseEntity<String>(result,HttpStatus.BAD_REQUEST);
+		}
 		if (operations.cashWithdrawal(accountNumber, amount)) {
 			result = amount + "withdraw from account " + accountNumber;
 			response = new ResponseEntity<String>(result, HttpStatus.OK);

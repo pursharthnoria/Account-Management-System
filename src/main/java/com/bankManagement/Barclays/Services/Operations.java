@@ -25,7 +25,7 @@ public class Operations {
 	}
 
 	public String accountCreation(BankCustomers customer) {
-		return repo.accountCreation(customer, generateCustomerId(), generatePassword());
+		return repo.accountCreation(customer, generateCustomerId(), generatePassword(), generateAccountNumber());
 	}
 
 	public List<Transaction> fiveTransaction(String fromAccount) {
@@ -38,7 +38,7 @@ public class Operations {
 	}
 
 	public boolean deposit(String accountNumber, int amount) {
-		if (repo.deposit(accountNumber, amount) == "True") {
+		if (repo.deposit(accountNumber, amount, generateTransactionId()) == "True") {
 			return true;
 		} else {
 			return false;
@@ -46,7 +46,7 @@ public class Operations {
 	}
 
 	public boolean cashWithdrawal(String accountNumber, int amount) {
-		if (repo.cashWithdrawal(accountNumber, amount)) {
+		if (repo.cashWithdrawal(accountNumber, amount, generateTransactionId())) {
 			return true;
 		} else {
 			return false;
@@ -81,4 +81,13 @@ public class Operations {
         return String.valueOf(partTransactionId)+String.valueOf(SecondPartTransactionId);
     }
 
+    public String generateAccountNumber() {
+        int min = 10000;
+        int max = 99999;
+
+        double first = Math.random() * (max - min + 1) + min;
+        double Second= Math.random() * (max - min + 1) + min;
+
+        return String.valueOf(first)+String.valueOf(Second);
+    }
 }
