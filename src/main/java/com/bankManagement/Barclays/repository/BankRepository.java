@@ -120,6 +120,8 @@ public class BankRepository {
 		try {
 			System.out.println("deposit started");
 			int newBalance=getbalance(accountNumber)+ amount;
+			System.out.println(getbalance(accountNumber));
+			System.out.println(newBalance);
 			String query="UPDATE cust_account SET balance=? where Account_id=?";
 			jdbcTemplate.update(query, new Object[] {newBalance, accountNumber});
 
@@ -162,7 +164,7 @@ public class BankRepository {
 
 	public int getbalance(String accountNumber) {
 		try {
-			String query = "Select balance from cust_account where Account_id=" + accountNumber;
+			String query = "Select balance from cust_account where Account_id="+accountNumber;
 			return jdbcTemplate.queryForObject(query, Integer.class);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
