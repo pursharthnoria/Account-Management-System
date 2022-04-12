@@ -171,4 +171,26 @@ public class BankRepository {
         }
     }
 
+    public List<Transaction> detailedTransaction(String fromAccount, String fromDate, String toDate) {
+        List<Transaction> allTransactions = new ArrayList<>();
+        try {
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+                    "Select * from Transactions where trans_from=? where trans_date>=? and trans_date<=?", new Object[] { fromAccount, fromDate, toDate });
+            allTransactions = rows.stream().map(m -> {
+                transaction.setTransactionReferenceNumber(String.valueOf(m.get("trans_id")));
+                transaction.setFromAccountNumber(String.valueOf(m.get("trans_from")));
+                transaction.setToAccountNumber(String.valueOf(m.get("trans_to")));
+                transaction.setAmount(Float.parseFloat(String.valueOf(m.get("trans_amount"))));
+                transaction.setType(String.valueOf(m.get("transaction_type")));
+                transaction.setTransactionDate(String.valueOf("trans_date"));
+                return transaction;
+            }).collect(Collectors.toList());
+
+            return allTransactions;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return allTransactions;
+        }
+    }
+
 }
