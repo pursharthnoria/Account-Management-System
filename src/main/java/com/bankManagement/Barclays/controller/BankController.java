@@ -5,7 +5,6 @@ import com.bankManagement.Barclays.Services.Operations;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +22,7 @@ import com.bankManagement.Barclays.Users.Login;
 
 @RestController
 @RequestMapping("/bank")
-public class BankController {
+public class BankController{
 
 	@Autowired
 	Operations operations;
