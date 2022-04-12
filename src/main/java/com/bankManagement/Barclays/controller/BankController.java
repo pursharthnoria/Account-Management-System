@@ -15,71 +15,106 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bankManagement.Barclays.Users.BankAccount;
 import com.bankManagement.Barclays.Users.BankCustomers;
 import com.bankManagement.Barclays.Users.Transaction;
-import com.bankManagement.Barclays.Users.Users;
+import com.bankManagement.Barclays.Users.Login;
 
 @RestController
 @RequestMapping("/bank")
 public class BankController {
-	
+
 	@Autowired
-    Operations operations;
-	
-	@PostMapping(path="/login")
-	public ResponseEntity<String> login(@RequestBody Users user){
-		return null;
+	Operations operations;
+
+	@PostMapping(path = "/login")
+	public ResponseEntity<String> login(@RequestBody Login user) {
+		BankCustomers customer=operations.login(user);
+		String result="";
+		if(customer==null) {
+			result="Wrong credentials. Please try again with correct ID and paaword";
+			return new ResponseEntity<String>(result, HttpStatus.BAD_REQUEST);
+		}
+		result="role";
+		return new ResponseEntity<String>(result,HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/queryAccount")
-	public ResponseEntity<String> queryAccount(@RequestParam String pancard){
-		return null;
+	public ResponseEntity<Boolean> queryAccount(@RequestParam String pancard) {
+		ResponseEntity<Boolean> response;
+		List<BankAccount> Accounts = operations.viewAccount(pancard);
+		if (Accounts.size() > 0) {
+			response = new ResponseEntity<Boolean>(true, HttpStatus.OK);
+		} else {
+			response = new ResponseEntity<Boolean>(false, HttpStatus.NOT_FOUND);
+		}
+		return response;
 	}
-	
+
 	@PostMapping("/accountCreation")
-	public ResponseEntity<String> accountCreation(@RequestBody BankCustomers customer){
-	  String customerId=operations.accountCreation(customer);
-	  ResponseEntity<String> response;
-	  if(customerId!="False") {
-		  response= new ResponseEntity<String>(customerId,HttpStatus.OK);
-	  }else {
-		  response= new ResponseEntity<String>("Error",HttpStatus.OK);
-	  }
-	  return response;
-	  
+	public ResponseEntity<String> accountCreation(@RequestBody BankCustomers customer) {
+		String customerId = operations.accountCreation(customer);
+		ResponseEntity<String> response;
+		if (customerId != "False") {
+			response = new ResponseEntity<String>(customerId, HttpStatus.OK);
+		} else {
+			response = new ResponseEntity<String>("Error", HttpStatus.OK);
+		}
+		return response;
+
 	}
-	
+
 	@GetMapping("/viewAccounts")
-	public ResponseEntity<String> viewAccounts(@RequestParam String pancard){
-		return null;
+	public ResponseEntity<List<BankAccount>> viewAccounts(@RequestParam String pancard) {
+		List<BankAccount> Accounts = operations.viewAccount(pancard);
+		return new ResponseEntity<List<BankAccount>>(Accounts, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/lastTransaction")
-	public ResponseEntity<List<Transaction>> fiveTransaction(@RequestParam String accountNumber){
-		List<Transaction> transaction=operations.fiveTransaction(accountNumber);
+	public ResponseEntity<List<Transaction>> fiveTransaction(@RequestParam String accountNumber) {
+		List<Transaction> transaction = operations.fiveTransaction(accountNumber);
 		return new ResponseEntity<List<Transaction>>(transaction, HttpStatus.OK);
-		
-		
+
 	}
-	
+
 	@GetMapping("/detailedTransaction")
-	public ResponseEntity<String> detailedTransaction(@RequestParam String accountNumber){
+	public ResponseEntity<String> detailedTransaction(@RequestParam String accountNumber) {
 		return null;
 	}
-	
+
 	@PutMapping("/withdrawal")
-	public ResponseEntity<String> cashWithdrawal(@RequestParam String accountNumber, @RequestParam int amount){
-		return null;
+	public ResponseEntity<String> cashWithdrawal(@RequestParam String accountNumber, @RequestParam int amount) {
+		String result;
+		ResponseEntity<String> response;
+		if (operations.cashWithdrawal(accountNumber, amount)) {
+			result = amount + "withdraw from account " + accountNumber;
+			response = new ResponseEntity<String>(result, HttpStatus.OK);
+		} else {
+			result = "cashWithdrawal can not be done due to some error. Please try again";
+			response = new ResponseEntity<String>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
+
 	}
-	
+
 	@PutMapping("/deposit")
-	public ResponseEntity<String> cashDeposit(@RequestParam String accountNumber, @RequestParam int amount){
-		return null;
+	public ResponseEntity<String> cashDeposit(@RequestParam String accountNumber, @RequestParam int amount) {
+		String result;
+		ResponseEntity<String> response;
+		if (operations.cashWithdrawal(accountNumber, amount)) {
+			result = amount + " is successfully deposited to account " + accountNumber;
+			response = new ResponseEntity<String>(result, HttpStatus.OK);
+		} else {
+			result = "Amount is not deposited due to some error please try again";
+			response = new ResponseEntity<String>(result, HttpStatus.BAD_REQUEST);
+		}
+		return response;
 	}
-	
+
 	@PutMapping("/transfer")
-	public ResponseEntity<String> transfer(@RequestParam String fromAccountNumber, @RequestParam String toAccountNumber, @RequestParam int amount){
+	public ResponseEntity<String> transfer(@RequestParam String fromAccountNumber, @RequestParam String toAccountNumber,
+			@RequestParam int amount) {
 		return null;
 	}
-	
+
 }

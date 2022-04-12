@@ -1,9 +1,8 @@
 package com.bankManagement.Barclays.Users;
 
-public class Users {
+public class Login {
     String userId;
     String password;
-    String Role;
 
 	public String getUserId() {
 		return userId;
@@ -19,13 +18,5 @@ public class Users {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-
-	public String getRole() {
-		return Role;
-	}
-
-	public void setRole(String role) {
-		Role = role;
 	}
 }
