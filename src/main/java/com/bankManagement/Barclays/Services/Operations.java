@@ -38,7 +38,7 @@ public class Operations {
 	}
 
 	public boolean deposit(String accountNumber, int amount) {
-		if (repo.deposit(accountNumber, amount, generateTransactionId()) == "True") {
+		if (repo.deposit(accountNumber, amount, generateTransactionId()) == "true") {
 			return true;
 		} else {
 			return false;
