@@ -6,12 +6,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 @SpringBootApplication
-public class BankingSystemApplication extends SpringBootServletInitializer{
+public class BankingSystemApplication{
 	
-	@Override
-	   protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-	      return application.sources(BankingSystemApplication.class);
-	   }
 
 	public static void main(String[] args) {
 		SpringApplication.run(BankingSystemApplication.class, args);
