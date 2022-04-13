@@ -314,4 +314,21 @@ public class BankRepository {
 				return false;
 			}
 		}
+	
+	public boolean createAccount(String customerId, String accountNumber) {
+		try {
+
+			jdbcTemplate.update("insert into cust_account (Account_id, customer_id,balance) values(?,?,?)",
+					new Object[] { accountNumber, customerId, 0 });
+			logger.info("New Account created for :"+ customerId+" with account number "+ accountNumber );
+			return true;
+			
+			
+		}catch (Exception e) {
+			// TODO: handle exception
+			logger.info(e.getMessage());
+			return false;
+		}
+		
+	}
 }

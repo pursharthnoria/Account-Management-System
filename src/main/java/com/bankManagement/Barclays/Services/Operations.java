@@ -120,5 +120,13 @@ public class Operations {
         return String.valueOf(first)+String.valueOf(Second);
     }
     
+    public String createAccount(String customerId) {
+    	String accountNumber=generateAccountNumber();
+    	if(repo.createAccount(customerId,accountNumber )) {
+    		return "Account Created with account number: "+ accountNumber ;
+    	}else {
+    		return "Account is not created due to some error. Please try again";
+    	}
+    }
     
 }

@@ -4,6 +4,7 @@ import com.bankManagement.Barclays.Services.Operations;
 
 import java.util.List;
 
+import org.apache.catalina.startup.ClassLoaderFactory.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,6 +170,11 @@ public class BankController{
 			return new ResponseEntity<String>("Account does not exist", HttpStatus.OK);
 		}
 		
+	}
+	
+	@PostMapping("/createAccount")
+	public ResponseEntity<String> createAccount(@PathVariable String customerId){
+		return new ResponseEntity<String>(operations.createAccount(customerId), HttpStatus.OK);
 	}
 
 }
