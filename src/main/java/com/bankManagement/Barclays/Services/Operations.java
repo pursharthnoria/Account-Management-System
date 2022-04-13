@@ -77,6 +77,10 @@ public class Operations {
 			return "Password is not changed due to some error please try again";
 		}
 	}
+	
+	public int getBalance(String accountNumber) {
+		return repo.getbalance(accountNumber);
+	}
 
 	public String generateCustomerId() {
 		int min = 100000;
