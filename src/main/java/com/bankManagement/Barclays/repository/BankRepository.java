@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.bankManagement.Barclays.Users.BankAccount;
 import com.bankManagement.Barclays.Users.BankCustomers;
+import com.bankManagement.Barclays.Users.ChangePassword;
 import com.bankManagement.Barclays.Users.Login;
 import com.bankManagement.Barclays.Users.Transaction;
 import com.bankManagement.Barclays.rowmapper.BankCustomerMapper;
@@ -24,6 +24,9 @@ public class BankRepository {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	EmailSender mail;
 
 	public String accountCreation(BankCustomers customer, String customerId, String password, String accountNumber) {
 		try {
@@ -43,6 +46,9 @@ public class BankRepository {
 				jdbcTemplate.update("insert into cust_account (Account_id, customer_id,balance) values(?,?,?)",
 						new Object[] { accountNumber, customerId, 0 });
 				result = customerId + " is generated with Account number " + accountNumber;
+				String subject="Customer Id creation and Account Id creation";
+				String body=result+"\n"+"Your temporary password is "+password+"Kindly change it while login for the first time.";
+				mail.sendEmail(customer.getEmail(), subject, body);
 			}else {
 				result="Customer already exists with the given Pancard";
 			}
@@ -132,6 +138,15 @@ public class BankRepository {
 			jdbcTemplate.update("insert into Transactions (trans_id, trans_amount,transaction_type,trans_from,trans_to,trans_date) values (?,?,?,?,?,?)",
 					new Object[] { transactionId, amount, "deposit", "Cash", accountNumber, sqlDate });
 
+			String subject="Money deposit";
+			String body=amount+" is deposited to your bank account "+accountNumber+" with transaction id: "+transactionId;
+			
+			String query1="Select customer_id from cust_account where Account_id="+accountNumber;
+			String customerid=jdbcTemplate.queryForObject(query1, String.class);
+			
+			String query2="Select email from Customer where c_id="+customerid;
+			String email=jdbcTemplate.queryForObject(query2, String.class);
+			mail.sendEmail(email, subject, body);
 			return "True";
 		} catch (Exception e) {
 			e.printStackTrace();;
@@ -152,6 +167,17 @@ public class BankRepository {
 				jdbcTemplate.update("insert into Transactions (trans_id, trans_amount,transaction_type,trans_from,trans_to,trans_date) values (?,?,?,?,?,?)",
 						new Object[] { transactionId, amount, "withdraw", accountNumber, "cash", sqlDate });
 
+				String subject="Cash Withdraw";
+				String body=amount+" is withdraw from your bank account "+accountNumber+" with transaction id: "+transactionId;
+				
+				String query1="Select customer_id from cust_account where Account_id="+accountNumber;
+				String customerid=jdbcTemplate.queryForObject(query1, String.class);
+				
+				String query2="Select email from Customer where c_id="+customerid;
+				String email=jdbcTemplate.queryForObject(query2, String.class);
+				
+				mail.sendEmail(email, subject, body);
+				
 				return true;
 			} else {
 				return false;
@@ -179,10 +205,25 @@ public class BankRepository {
 			jdbcTemplate.update(queryFrom, new Object[] { amount, fromAccount });
 
 			System.out.println("Amount debited.");
+			
+			
 			String queryTo = "UPDATE cust_account SET balance=balance+? WHERE Account_id=?";
 			jdbcTemplate.update(queryTo, new Object[] { amount, toAccount });
 			System.out.println("Amount credited.");
 
+			String subject="Amount debited";
+			String body=amount+" is sent from your bank account "+fromAccount+" to bank account "+toAccount+" with transaction id: "+transactionId;
+			
+			String query1="Select customer_id from cust_account where Account_id="+fromAccount;
+			String customerid=jdbcTemplate.queryForObject(query1, String.class);
+			
+			String query2="Select email from Customer where c_id="+customerid;
+			String email=jdbcTemplate.queryForObject(query2, String.class);
+			
+			mail.sendEmail(email, subject, body);
+			
+
+			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 			Date date = new Date();
 			java.sql.Date sqlDate = new java.sql.Date(date.getTime());
@@ -229,4 +270,15 @@ public class BankRepository {
 		}
 	}
 
+
+	public boolean passwordChange(ChangePassword password) {
+		String query="UPDATE Customer SET password=? where c_id=?";
+		try {
+			jdbcTemplate.update(query,new Object[] {password.getNewPassword(),password.getUserId()});
+			return true;
+			}catch (Exception e) {
+				System.out.println(e.getStackTrace());
+				return false;
+			}
+		}
 }

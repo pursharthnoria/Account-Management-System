@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.bankManagement.Barclays.Users.BankAccount;
 import com.bankManagement.Barclays.Users.BankCustomers;
+import com.bankManagement.Barclays.Users.ChangePassword;
 import com.bankManagement.Barclays.Users.Login;
 import com.bankManagement.Barclays.Users.Transaction;
 import com.bankManagement.Barclays.repository.BankRepository;
@@ -68,6 +69,14 @@ public class Operations {
 		return result;
 		
 	}
+	
+	public String changePassword(ChangePassword password) {
+		if(repo.passwordChange(password)) {
+			return "Password changed successfully";
+		}else {
+			return "Password is not changed due to some error please try again";
+		}
+	}
 
 	public String generateCustomerId() {
 		int min = 100000;
@@ -106,4 +115,6 @@ public class Operations {
 
         return String.valueOf(first)+String.valueOf(Second);
     }
+    
+    
 }

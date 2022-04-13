@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bankManagement.Barclays.Users.BankAccount;
 import com.bankManagement.Barclays.Users.BankCustomers;
+import com.bankManagement.Barclays.Users.ChangePassword;
 import com.bankManagement.Barclays.Users.Transaction;
 import com.bankManagement.Barclays.Users.Login;
 
@@ -92,10 +94,10 @@ public class BankController{
 			response=new ResponseEntity<String>(result,HttpStatus.BAD_REQUEST);
 		}
 		if (operations.cashWithdrawal(accountNumber, amount)) {
-			result = amount + "withdraw from account " + accountNumber;
+			result = amount + " withdraw from account " + accountNumber;
 			response = new ResponseEntity<String>(result, HttpStatus.OK);
 		} else {
-			result = "cashWithdrawal can not be done due to some error. Please try again";
+			result = "cash Withdrawal can not be done due to some error. Please try again";
 			response = new ResponseEntity<String>(result, HttpStatus.BAD_REQUEST);
 		}
 		return response;
@@ -125,6 +127,13 @@ public class BankController{
 		}else {
 			return new ResponseEntity<String>(result,HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@PostMapping("/changePassword")
+	public ResponseEntity<String> changePassword(@RequestBody ChangePassword changePassword){
+		System.out.println("start");
+		  String result=operations.changePassword(changePassword);
+		  return new ResponseEntity<String>(result,HttpStatus.OK);
 	}
 
 }
